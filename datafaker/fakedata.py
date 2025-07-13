@@ -6,6 +6,8 @@ import time
 from faker import Faker, Factory
 from datafaker import compat
 from datafaker.compat import Dict
+import json
+import uuid
 
 
 class FackData(object):
@@ -37,8 +39,8 @@ class FackData(object):
     def fake_integer(self, *args):
         return self.fake_int(*args)
 
-    def fake_bigint(self, *args):
-        return self.faker.random_int(0, 18446744073709551615) if len(args) > 0 \
+    def fake_bigint(self, unsigned=False):
+        return self.faker.random_int(0, 18446744073709551615) if unsigned==False \
             else self.faker.random_int(-9223372036854775808, 9223372036854775807)
 
     def fake_float(self, *args):
@@ -113,13 +115,13 @@ class FackData(object):
 
     def fake_timestamp(self, now=0):
 
-        timestamp = int(time.time()) if now else self.faker.unix_time()
-        return timestamp
+        # timestamp = int(time.time()) if now else self.faker.unix_time()
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     ########### mysql 字符串类型##############
 
-    def fake_char(self, *args):
-        return self.faker.pystr(min_chars=1, max_chars=255)
+    def fake_char(self, length=255):
+        return self.faker.pystr(min_chars=length, max_chars=length)
 
     def fake_varchar(self, max_chars=255):
         return self.faker.pystr(min_chars=1, max_chars=max_chars)
@@ -214,6 +216,66 @@ class FackData(object):
         """
         return None
 
+    def fake_real(self, *args):
+        """PostgreSQL REAL类型（单精度浮点）"""
+        return self.faker.pyfloat(left_digits=5, right_digits=2)
+    
+    
+
+    def fake_money(self, *args):
+        """PostgreSQL MONEY类型（货币格式）"""
+        return "${:,.2f}".format(self.faker.pyfloat(positive=True, min_value=0, max_value=100000))
+    
+    def fake_timetz(self, *args):
+        """PostgreSQL TIMETZ类型（带时区时间）"""
+        return self.faker.time(pattern="%H:%M:%S%z")
+
+    def fake_timestamptz(self, *args):
+        """PostgreSQL TIMESTAMPTZ类型（带时区时间戳）"""
+        return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S%z")
+
+    def fake_interval(self, *args):
+        """PostgreSQL INTERVAL类型（时间间隔）"""
+        days = random.randint(0, 365)
+        seconds = random.randint(0, 86400)
+        return f"{days} days {seconds} seconds"
+    
+    def fake_bytea(self, max_bytes=1024):
+        """PostgreSQL BYTEA类型（二进制数据）"""
+        return self.faker.binary(length=random.randint(1, max_bytes))
+
+    def fake_json(self, *args):
+        """PostgreSQL JSON类型"""
+        return json.dumps({"data": self.faker.word(), "value": self.faker.random_int()})
+
+    def fake_jsonb(self, *args):
+        """PostgreSQL JSONB类型（二进制JSON）"""
+        return self.fake_json().encode('utf-8') 
+    
+    def fake_inet(self, *args):
+        """PostgreSQL INET类型（IP地址）"""
+        return self.faker.ipv4()
+
+    def fake_cidr(self, *args):
+        """PostgreSQL CIDR类型（网络地址）"""
+        return f"{self.faker.ipv4()}/{random.randint(16, 24)}"
+
+    def fake_macaddr(self, *args):
+        """PostgreSQL MACADDR类型（MAC地址）"""
+        return self.faker.mac_address()  
+        
+    def fake_uuid(self, *args):
+        """PostgreSQL UUID类型"""
+        return str(uuid.uuid4())
+
+    def fake_tsvector(self, max_words=5):
+        """PostgreSQL TSVECTOR类型（全文搜索向量）"""
+        words = [self.faker.word() for _ in range(random.randint(1, max_words))]
+        return " ".join(words)
+
+    def fake_xml(self, *args):
+        """PostgreSQL XML类型"""
+        return f"<root><value>{self.faker.random_int()}</value></root>" 
     ######## 执行主函数 #########
     def do_fake(self, keyword, args, current_num):
         """
