@@ -276,6 +276,47 @@ class FackData(object):
     def fake_xml(self, *args):
         """PostgreSQL XML类型"""
         return f"<root><value>{self.faker.random_int()}</value></root>" 
+    
+    def fake_str_pk(self, prefix="ID", digits=8):
+        """
+        生成带前缀的自增字符串主键（如：ID00000001）
+        :param prefix: 主键前缀
+        :param digits: 数字部分位数
+        :return: 字符串主键
+        """
+        mark = f"str_pk_{prefix}"
+        with self.lock:
+            if mark not in self.auto_inc:
+                self.auto_inc[mark] = 0
+            current_val = self.auto_inc[mark]
+            self.auto_inc[mark] += 1
+        return f"{prefix}{str(current_val).zfill(digits-2)}"
+
+    def fake_hash_pk(self, length=32):
+        """
+        生成哈希字符串主键（如UUID的简化版）
+        :param length: 哈希长度（16/32/64）
+        :return: 哈希字符串
+        """
+        return self.faker.sha256(raw_output=False)[:length]
+
+    def fake_composite_pk(self, *parts):
+        """
+        生成组合主键（多个字段用分隔符合并）
+        :param parts: 要组合的值列表
+        :return: 组合后的字符串
+        """
+        separator = "_"
+        return separator.join(str(part) for part in parts)
+
+    def fake_random_str_pk(self, length=16, chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"):
+        """
+        生成随机字符串主键（避免易混淆字符）
+        :param length: 字符串长度
+        :param chars: 允许的字符集
+        :return: 随机字符串
+        """
+        return ''.join(random.choices(chars, k=length))
     ######## 执行主函数 #########
     def do_fake(self, keyword, args, current_num):
         """
