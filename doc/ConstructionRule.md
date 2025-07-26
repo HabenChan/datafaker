@@ -99,9 +99,9 @@ Op (C1 * C4 + C13) means the value of the first column multiplied by the value o
 | latitude  | Geographic coordinates (latitude) | 68.0228435 | |
 | longitude | Geographical coordinates (longitude) | 155.964341 | |
 | postcode | Zip code | 803511 |  |
-|street_address | Street address | Kushiro W | |
-|street_name | Street name | Hefei Road| |
-| street_suffix | Street, road | street | |
+|street_address | Street address | Building W, Handan Road | |
+|street_name |Street name | Hefei Road| |
+| street_suffix | Street | street | |
 
 - Numerical type
 
@@ -109,146 +109,100 @@ Op (C1 * C4 + C13) means the value of the first column multiplied by the value o
 | -------- | -------- | ------ | ------- |
 |random_digit | 0~9 random number| 1 | |
 |random_digit_not_null |1~9 random number| 9| |
-|random_element | Random letter | a | |
-|random_int|Random number| 44 |The range can be set, which can be set by setting min, max. The default is 0~9999, for example, random_int(1,100)|
-|random_letter| Random letter| e | |
-|random_number | Random number | For example, random_number(2) generates 2 as a number |
+|random_element | random letter| a | |
+|random_int|random number| 44 |The range can be set. The min and max can be set. The default value is 0~9999. For example, random_int(1,100)|
+|random_letter| random letter| e | |
+|random_number | random number | The digits parameter sets the number of digits of the generated number |For example, random_number(2) generates a 2-digit number |
 |boolean| True/False| False | |
-|numerify| Three random numbers | 934| |
-| number | A certain number | 44322 | number(digits=None, fix_len=0, positive=0)有三个参数，digits表示多少位数字，fix_len表示是否固定长度（1表示固定长度，否则为1到digits长度）positive表示是否为正数（1为正数，-1为负数，0正负都可能）。number(18, 1, 1) 产生18位数固定长度的正整数 Number (digits = none, fix? Len = 0, position = 0) has three parameters. Digits indicates the number of digits, fix? Len indicates whether the length is fixed (1 indicates fixed length, otherwise 1 to digits length). Position indicates whether the length is positive (1 is positive, - 1 is negative, 0 can be positive or negative). Number (18, 1, 1) produces a positive integer with a fixed length of 18 digits|
+|numerify| Three random numbers| 934| |
+| number | A certain number of digits | 44322 | number(digits=None, fix_len=0, positive=0) has three parameters, digits means how many digits, fix_len means whether the length is fixed (1 means fixed length, otherwise 1 to digits length) positive means whether it is a positive number (1 is positive, -1 is negative, 0 is both positive and negative). number(18, 1, 1) generates a positive integer with a fixed length of 18 digits|
 
-- company
+- Company
 
-|Construction rule | meaning | example | remarks|
+| rule mark | description |Example | note |
 | -------- | -------- | ------ | ------- |
-|BS company service name transition open source content|
-|Company name (long) Tiankai Information Co., Ltd|
-|Company | prefix | company name (short) | Puhua Zhongcheng ||
-|Company | suffix | company nature | Media Co., Ltd. ||
-|Job | position | Project Executive / Coordinator ||
-
-
+| bs | Company service name | transition open-source content | |
+| company | Company name (long)| Tiankai Information Co., Ltd. | |
+| company_prefix | Company name (short)| Puhua Zhongcheng | |
+| company_suffix | Company nature | Media Co., Ltd. | |
+|job | Position | Project Execution/Coordination Staff | |
 
 - Credit card, currency
 
-|Construction rule | meaning | example | remarks|
+| rule mark | description |Example | note |
 | -------- | -------- | ------ | ------- |
-|Credit card expiry date 05 / 19|
-|Credit card full credit card information JCB 16 digital 3514193766205948 08 / 21cvc: 436|
-|Credit card number 3500011993590161|
-|Credit card provider American Express|
-|Credit card security code 190|
-|Currency code HNL|
+|credit_card_expire | Credit card expiration date | 05/19 | |
+| credit_card_full | Complete credit card information | JCB 16 digit Xia Zhang 3514193766205948 08/21CVC: 436 | |
+| credit_card_number |Credit card number| 3500011993590161 | |
+| credit_card_provider | Credit card type| American Express | |
+| credit_card_security_code | Credit card security code| 190 | |
+| currency_code | Currency code | HNL | |
 
 - Date, time
 
-|Construction rule | meaning | example | remarks|
+| rule mark | description |Example | note |
 | -------- | -------- | ------ | ------- |
 | am_pm | AM/PM | AM | |
-|Century VII|
-|Date | random date | 2014-05-18 | date (start | date, end | date, format) < br > start | date means the number of days pushed forward from the current date, the default value is - 30y, the first 30 years, < br > end | date means the number of days pushed back from the current date, the default value is today | br > format is the date grid, the default value is% Y -% m -% d < br > for example, date (- 30d, + 20d,% y.% M.% d)|
-|Date | between | within the specified range | 1997-08-29 | date | between (start | date, end | date, format) < br > start | date means start date, required < br > end | date, required < br > format is date format, default value is% Y -% m -% d < br > date | between (2017-01-01, 2019-12-02,% Y% m% d)|
-|Date | this | month | date of current month | March 13, 2019 ||
-|Date | this year | March 9, 2019|
-|Date | time / datetime | (January 1, 1970 to now) time | can be datetime without parameter, or datetime with parameter (0) random time, datetime (1,% Y -% m -% d% H:% m) data generation time 2010-06-15 04:07 | datetime (now, format): now (whether 0,1 uses the current time, 0 represents the random event by default, 1 is the current time), Format (default time format is%Y-%m-%d%H:%M:%S)|
-|Date | time | specified range time | 2009-10-03 03:15:07 | use the same as dates
-|Month | random month | 05 ||
-|Month| name | random month | December ||
-|Time | random 24-hour time | 18:52:55 ||
-|Timezone | random time zone | Europe / Andorra ||
-|UNIX time random UNIX time 203461583|
-|Timestamp | random UNIX time | timestamp / timestamp (0) random timestamp, timestamp (1) the current data generates a timestamp | with a parameter default of 0|
-|Year | random year | 2017 ||
+| century | Century | VII | |
+| date | random date |2014-05-18 |date(start_date,end_date,format)<br>start_date represents the number of days pushed back from the current date. The default value is -30y, 30 years ago,<br>end_date represents the number of days pushed back from the current date. The default value is today<br>format is the date format. The default value is %Y-%m-%d<br>For example, date(-30d, +20d, %Y.%m.%d) |
+| date_between| Date within specified range| 1997-08-29 |date_between(start_date,end_date,format)<br>start_date represents the start date, required<br>end_date represents the end date, required<br>format is the date format. The default value is %Y-%m-%d<br>date_between(2017-01-01, 2019-12-02, %Y%m%d)|
+|date_this_month | Date of the current month | 2019-03-13 | |
+| date_this_year | Date within this year | 2019-03-09 | |
+| date_time/datetime | Time (from January 1, 1970 to present)| Can be datetime without parameters, or datetime(0) random time, datetime(1,%Y-%m-%d %H:%M) data generation time 2010-06-15 04:07 | datetime(now,format) two parameters: now(0,1 whether to use the current time, the default is 0 for random events, 1 for the current time), format(time format, default is %Y-%m-%d %H:%M:%S)|
+| datetime_between | Specified range time | 2009-10-03 03:15:07 |datetime_between(sdt, edt, foramt='%Y-%m-%d %H:%M:%S'), sdt and edt are start and end times, the format is %Y-%m-%d %H:%M:%S, and the format is the output time format. datetime_between('2019-04-14 00:00:00', '2019-04-15 00:00:00') outputs 2019-04-14 00:55:07 |
+| month | Random month| 05 | |
+|month_name | Random month (English)| December | |
+| time() | Random 24-hour time| 18:52:55 | |
+| timezone | Random time zone| Europe/Andorra| |
+|unix_time |Random Unix time| 203461583 | |
+|timestamp |Random Unix time| timestamp/timestamp(0) random timestamp, timestamp(1) current data generation timestamp | With one parameter, the default is 0|
+|year | Random year| 2017 | |
 
-- Internet
+- internet
 
-|Construction rule | meaning | example | remarks|
+| rule mark | description |Example | note |
 | -------- | -------- | ------ | ------- |
-|File extension file extension wav|
-|File | name | filename (including extension, excluding path) | werwe.jpg |)|
-|File path file path (including file name, extension) | / home / ||
+|file_extension | File extension | wav | |
+| file_name | File name (including extension, without path)| werwe.jpg| |
+|file_path | File path (including file name, extension)| /home/| |
 | mime_type | mime Type| video/x-flv| |
-|Company email: company email: jieyan@14.cn|
-|Domain name domain jq.cn|
-|Email | email | kren@wei.cn ||
-|Image | URL | random URL address | https://www.lorempixel.com/470/178||
-|IPv4 | IP4 address | 192.0.25.141 ||
-|IPv6 | IP6 address | 206F: 1ff0:374:2d5f: a6f8:69ef: 4ba9:2d14 ||
-|MAC address MAC address 65:02: ED: 82: c6:98|
-|TLD domain name suffix (. Com,. Net. CN, etc., excluding.)|
-|URI | URI address | http://24.cn/ ||
-|URL | URL address | http://www.guiyinglei.cn/ ||
-|User | name | user name | ping51 ||
-|User agent random user agent information|
-|Chrome browser user agent information Mozilla / 5.0 (X11; Linux x86) applewebkit / 5342 (KHTML, like gecko) Chrome / 27.0.819.0 Safari / 5342|
-|Firefox browser user agent information|
-|Internet Explorer IE browser user agent information|
-|Opera browser user agent|
-|Safari browser user agent information|
-|Linux | platform | token | random Linux information | X11; Linux i686 ||
-|Isbn10 | random ISBN (10 bits) | 1-02-136461-4 ||
-|Isbn13 | random ISBN (13 bits) | 978-0-15-215169-0 ||
+|company_email |Company email | jieyan@14.cn | |
+| domain_name | Domain name | jq.cn | |
+| email | email | kren@wei.cn | |
+|image_url | Random URL address | https://www.lorempixel.com/470/178| |
+|ipv4 | IP4 address | 192.0.25.141 | |
+| ipv6 | IP6 address | 206f:1ff0:374:2d5f:a6f8:69ef:4ba9:2d14 | |
+| mac_address | MAC address | 65:02:ed:82:c6:98 | |
+| tld | Website domain name suffix (.com,.net.cn, etc., excluding.) | cn | |
+|uri | URI address| http://24.cn/ | |
+|url | URL address| http://www.guiyinglei.cn/ | |
 
-- Text type
+- PostgreSQL Types
 
-|Construction rule | meaning | example | remarks|
+| rule mark | description |Example | note |
 | -------- | -------- | ------ | ------- |
-|Paragraph | randomly generates a paragraph ||
-|Sentence randomly generates a sentence|
-|Text | randomly generate an article | don't fantasize about artificial intelligence, so far you haven't fully understood the meaning of a sentence ||
-|Word | randomly generate word | Hello ||
-|Locale | randomly generated language / international information | Niu | NZ | national localization code|
-|MD5 | randomly generate MD5 | fd80f4681258a9ecb329ab12782dfbba ||
-|Password | randomly generate password |) we3jvivb1 | optional parameters: length: password length; special_chars: whether special characters can be used; digits: whether numbers are included; upper_case: whether uppercase letters are included; lower_case: whether lowercase letters are included|
-|SHA1 | random SHA1 | e9bb2fcd4b4089cc89c366850ceafe779dbe58 ||
-|Sha256 | random sha256 | dd119cb2aec9b3d5557e56bb497757d42f82b32486ea92126942821d3b657957 ||
-|Uuid4 | random UUID | 04aff886-8482-4069-9260-7917fd83982d ||
+| real | PostgreSQL REAL type (single precision float) | 12345.67 |  |
+| numeric | PostgreSQL NUMERIC type (arbitrary precision) | 1234.56 | numeric(precision, scale) e.g. numeric(5,2) |
+| money | PostgreSQL MONEY type (currency format) | $1,234.56 |  |
+| timetz | PostgreSQL TIMETZ type (time with time zone) | 12:34:56+08:00 |  |
+| timestamptz | PostgreSQL TIMESTAMPTZ type (timestamp with time zone) | 2023-01-01 12:34:56+08:00 |  |
+| interval | PostgreSQL INTERVAL type (time interval) | 30 days 12:34:56 |  |
+| bytea | PostgreSQL BYTEA type (binary data) | b'\x89PNG\r\n\x1a\n' |  |
+| json | PostgreSQL JSON type | {"key": "value"} |  |
+| jsonb | PostgreSQL JSONB type (binary JSON) | {"key": "value"} |  |
+| inet | PostgreSQL INET type (IP address) | 192.168.1.1 |  |
+| cidr | PostgreSQL CIDR type (network address) | 192.168.1.0/24 |  |
+| macaddr | PostgreSQL MACADDR type (MAC address) | 08:00:2b:01:02:03 |  |
+| uuid | PostgreSQL UUID type | 550e8400-e29b-41d4-a716-446655440000 |  |
+| tsvector | PostgreSQL TSVECTOR type (full text search vector) | 'hello world' |  |
+| xml | PostgreSQL XML type | <tag>value</tag> |  |
 
+- Custom Primary Key Types
 
-- Character information related
-
-|Construction rule | meaning | example | remarks|
+| rule mark | description |Example | note |
 | -------- | -------- | ------ | ------- |
-|Name | full name | Dan Yuzhen|
+| str_pk | String primary key with prefix | ID00000001 | str_pk(prefix, digits) e.g. str_pk(TEST, 10) |
+| hash_pk | Hash string primary key | a1b2c3d4e5f6 | hash_pk(length) e.g. hash_pk(16) |
+| composite_pk | Composite primary key | part1_part2_123 | composite_pk(part1, part2, part3) |
+| random_str_pk | Random string primary key | A1B2C3D4E5 | random_str_pk(length) e.g. random_str_pk(10) |
 
-- Text type
-
-|Construction rule | meaning | example | remarks|
-| -------- | -------- | ------ | ------- |
-|Paragraph | randomly generates a paragraph ||
-|Sentence randomly generates a sentence|
-|Text | randomly generate an article | don't fantasize about artificial intelligence, so far you haven't fully understood the meaning of a sentence ||
-|Word | randomly generate word | Hello ||
-|Locale | randomly generated language / international information | Niu | NZ | national localization code|
-|MD5 | randomly generate MD5 | fd80f4681258a9ecb329ab12782dfbba ||
-|Password | randomly generate password |) we3jvivb1 | optional parameters: length: password length; special_chars: whether special characters can be used; digits: whether numbers are included; upper_case: whether uppercase letters are included; lower_case: whether lowercase letters are included|
-|SHA1 | random SHA1 | e9bb2fcd4b4089cc89c366850ceafe779dbe58 ||
-|Sha256 | random sha256 | dd119cb2aec9b3d5557e56bb497757d42f82b32486ea92126942821d3b657957 ||
-|Uuid4 | random UUID | 04aff886-8482-4069-9260-7917fd83982d ||
-
-- Character information related
-
-|Construction rule | meaning | example | remarks|
-| -------- | -------- | ------ | ------- |
-|Name full name Dan Yuzhen|
-|Name | female | male full name | official ||
-|Name | male | female full name | Xu Ying|
-|First name|
-|Last| name | surname | pan ||
-|First|name|female||
-|Last | name | female | surname | Wang ||
-|First | name | male | name | strong ||
-|Last | name | male | surname | Yang ||
-|Age | person age | 23 | default value 0-100|
-|Ssn| ID card No. | 350526193807198690||
-|Phone number mobile number 13926798387|
-|Phonenumber | prefix | mobile number segment | 157 ||
-|Profile information||: u'juanpan@hotmail.com '}||
-
-- Miscellaneous
-
-|Construction rule | meaning | example | remarks|
-| -------- | -------- | ------ | ------- |
-|Color|name|random color name|moccasin||
-|Hex color random hex color 7f7cb6|
-|RGB color random RGB color 210,85105|

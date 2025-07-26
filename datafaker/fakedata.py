@@ -82,10 +82,10 @@ class FackData(object):
 
     def fake_datetime_between(self, sdt, edt, foramt='%Y-%m-%d %H:%M:%S'):
         sdatetime = datetime.datetime.strptime(sdt, '%Y-%m-%d %H:%M:%S')
-        stimestamp = time.mktime(sdatetime.timetuple())
+        stimestamp = int(time.mktime(sdatetime.timetuple()))
 
         edatetime = datetime.datetime.strptime(edt, '%Y-%m-%d %H:%M:%S')
-        etimestamp = time.mktime(edatetime.timetuple())
+        etimestamp = int(time.mktime(edatetime.timetuple()))
 
         timestamp = random.randint(stimestamp, etimestamp)
         ltime = time.localtime(timestamp)
@@ -127,24 +127,44 @@ class FackData(object):
         return self.faker.pystr(min_chars=1, max_chars=max_chars)
 
     def fake_tinyblob(self, *args):
-        # TODO 待实现
-        return None
+        # TINYBLOB类型最大长度为255字节
+        length = random.randint(0, 255)
+        blob_data = self.faker.binary(length=length)
+        return blob_data.hex()  # 返回十六进制字符串而不是bytes
 
     def fake_tinytext(self, *args):
         max_nb_chars = args[0] if len(args) else 255
         return self.faker.text(max_nb_chars=max_nb_chars)
 
     def fake_text(self, *args):
+        """
+        生成随机文本
+        :param args: 可选参数，指定生成文本的最大字符数
+        :return: 随机生成的文本
+        """
         max_nb_chars = args[0] if len(args) else 65535
+        # 限制最大长度不超过MySQL TEXT类型的限制 (2^16 - 1)
+        if max_nb_chars > 65535:
+            max_nb_chars = 65535
         return self.faker.text(max_nb_chars=max_nb_chars)
 
     def fake_mediumtext(self, *args):
-        # TODO 待实现
-        return None
+        # MEDIUMTEXT类型最大长度为16777215字符 (2^24 - 1)
+        # 为了性能考虑，默认生成较小的文本
+        max_nb_chars = args[0] if len(args) else 10000
+        # 限制最大长度不超过MEDIUMTEXT的限制
+        if max_nb_chars > 16777215:
+            max_nb_chars = 16777215
+        return self.faker.text(max_nb_chars=max_nb_chars)
 
     def fake_longtext(self, *args):
-        # TODO 待实现
-        return None
+        # LONGTEXT类型最大长度为4294967295字符 (2^32 - 1)
+        # 为了性能考虑，默认生成较小的文本
+        max_nb_chars = args[0] if len(args) else 10000
+        # 限制最大长度不超过LONGTEXT的限制
+        if max_nb_chars > 4294967295:
+            max_nb_chars = 4294967295
+        return self.faker.text(max_nb_chars=max_nb_chars)
 
     ############ hive 基本数据类型 #############
 
@@ -171,7 +191,7 @@ class FackData(object):
     ####### 定制函数 ##########
     def fake_age(self, *args):
         if not args:
-            args = [0, 100]
+            args = [0, 120]
         return self.faker.random_int(*args)
 
     def fake_inc(self, mark, start=0, step=1):
@@ -218,10 +238,50 @@ class FackData(object):
 
     def fake_real(self, *args):
         """PostgreSQL REAL类型（单精度浮点）"""
-        return self.faker.pyfloat(left_digits=5, right_digits=2)
+        return self.faker.pyfloat(left_digits=4, right_digits=2)
     
+    def fake_numeric(self, precision=None, scale=None):
+        """
+        PostgreSQL NUMERIC类型
+        precision: 总位数
+        scale: 小数位数
+        """
+        if precision is None:
+            # 如果没有指定精度，默认使用10位总长度
+            precision = 10
+        if scale is None:
+            # 如果没有指定小数位数，默认使用2位小数
+            scale = 2
+            
+        # 整数部分位数
+        integer_digits = precision - scale
+        
+        # 生成整数部分
+        if integer_digits > 0:
+            max_integer = 10 ** integer_digits - 1
+            integer_part = self.faker.random_int(0, max_integer)
+        else:
+            integer_part = 0
+            
+        # 生成小数部分
+        if scale > 0:
+            # 生成scale位数字的字符串
+            decimal_part = "".join([str(self.faker.random_digit()) for _ in range(scale)])
+        else:
+            decimal_part = ""
+            
+        # 组合数字
+        if scale > 0:
+            number_str = f"{integer_part}.{decimal_part}"
+        else:
+            number_str = str(integer_part)
+            
+        # 随机添加正负号
+        if self.faker.boolean():
+            number_str = "-" + number_str
+            
+        return number_str
     
-
     def fake_money(self, *args):
         """PostgreSQL MONEY类型（货币格式）"""
         return "${:,.2f}".format(self.faker.pyfloat(positive=True, min_value=0, max_value=100000))
@@ -242,7 +302,8 @@ class FackData(object):
     
     def fake_bytea(self, max_bytes=1024):
         """PostgreSQL BYTEA类型（二进制数据）"""
-        return self.faker.binary(length=random.randint(1, max_bytes))
+        blob_data = self.faker.binary(length=random.randint(1, max_bytes))
+        return blob_data.hex()  # 返回十六进制字符串而不是bytes
 
     def fake_json(self, *args):
         """PostgreSQL JSON类型"""
@@ -250,7 +311,7 @@ class FackData(object):
 
     def fake_jsonb(self, *args):
         """PostgreSQL JSONB类型（二进制JSON）"""
-        return self.fake_json().encode('utf-8') 
+        return self.fake_json()  # 直接返回JSON字符串而不是编码后的bytes
     
     def fake_inet(self, *args):
         """PostgreSQL INET类型（IP地址）"""
@@ -281,7 +342,7 @@ class FackData(object):
         """
         生成带前缀的自增字符串主键（如：ID00000001）
         :param prefix: 主键前缀
-        :param digits: 数字部分位数
+        :param digits: 总长度
         :return: 字符串主键
         """
         mark = f"str_pk_{prefix}"
@@ -290,7 +351,13 @@ class FackData(object):
                 self.auto_inc[mark] = 0
             current_val = self.auto_inc[mark]
             self.auto_inc[mark] += 1
-        return f"{prefix}{str(current_val).zfill(digits-2)}"
+        # 计算数字部分的位数
+        prefix_len = len(prefix)
+        number_len = int(digits) - prefix_len
+        # 确保数字部分至少有1位
+        if number_len < 1:
+            number_len = 1
+        return f"{prefix}{str(current_val).zfill(number_len)}"
 
     def fake_hash_pk(self, length=32):
         """
