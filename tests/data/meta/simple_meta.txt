@@ -1,0 +1,8 @@
+id||int||自增id[:inc(id)]
+name||varchar(50)||姓名[:name]
+address||varchar(200)||地址[:address]
+phone||varchar(20)||电话号码[:phone_number]
+email||varchar(100)||邮箱[:email]
+company||varchar(100)||公司[:company]
+job||varchar(100)||职位[:job]
+age||int||年龄[:fake_age(18,80)]
