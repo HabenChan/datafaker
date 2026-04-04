@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from datafaker.fakedata import FackData
+from datafaker.datatypes.postgresql import PostgreSQLDataType
 
-# 创建FackData实例
-facker = FackData('zh_CN')
+# 创建PostgreSQLDataType实例
+facker = PostgreSQLDataType('zh_CN')
 
 print("Testing PostgreSQL and custom types:")
 print("=" * 50)
@@ -35,12 +35,3 @@ print("String PK:", facker.fake_str_pk("ID", 10))
 print("Hash PK:", facker.fake_hash_pk(20))
 print("Random String PK:", facker.fake_random_str_pk(15))
 
-print("\n" + "=" * 50)
-print("MySQL BLOB/TEXT Types:")
-print("=" * 50)
-
-# 测试MySQL BLOB/TEXT类型
-print("TINYBLOB (first 10 bytes):", facker.fake_tinyblob()[:10])
-print("TINYTEXT:", facker.fake_tinytext(50))
-print("MEDIUMTEXT (first 50 chars):", facker.fake_mediumtext(50)[:50])
-print("LONGTEXT (first 50 chars):", facker.fake_longtext(50)[:50])

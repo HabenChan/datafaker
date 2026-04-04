@@ -1,10 +1,10 @@
-## 5. Usage example
+## 5. Usage Examples
 
 English | [中文](zh_CN/使用举例.md)
 
 $ stands for terminal prompt
 
-### 5.1. View the version number and view the parameter usage instructions
+### 5.1. View the version number and parameter usage instructions
 ---------
 
 ```
@@ -31,7 +31,7 @@ optional arguments:
   --meta [META]         meta file path
   --interval INTERVAL   the interval to make stream data
   --version             print the version number and exit
-  --outprint            print fake date to screen
+  --outprint            print fake data to screen
   --outspliter OUTSPLITER
                         print data, to split columns
   --locale LOCALE       which country language
@@ -39,68 +39,68 @@ optional arguments:
                         text)
 ```
 
-### 5.2 create stu table in mysql
+### 5.2. Create a student table in MySQL
 ---------
 
 ```sql
-create table stu (
-	id int unsigned auto_increment primary key COMMENT '自增id',
-	name varchar(20) not null comment 'stu name',
-	school varchar(20) not null comment 'school name',
-	nickname varchar(20) not null comment 'nickname',
-	age int not null comment 'age',
-	class_num int not null comment 'class size',
-	score decimal(4,2) not null comment 'score',
-	phone bigint not null comment 'phone number',
-	email varchar(64) comment 'email',
-	ip varchar(32) comment 'IP',
-	address text comment 'home address'
-) engine=InnoDB default charset=utf8;
+CREATE TABLE stu (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY COMMENT 'Auto-increment ID',
+	name VARCHAR(20) NOT NULL COMMENT 'Student name',
+	school VARCHAR(20) NOT NULL COMMENT 'School name',
+	nickname VARCHAR(20) NOT NULL COMMENT 'Nickname',
+	age INT NOT NULL COMMENT 'Age',
+	class_num INT NOT NULL COMMENT 'Class size',
+	score DECIMAL(4,2) NOT NULL COMMENT 'Score',
+	phone BIGINT NOT NULL COMMENT 'Phone number',
+	email VARCHAR(64) COMMENT 'Email',
+	ip VARCHAR(32) COMMENT 'IP address',
+	address TEXT COMMENT 'Home address'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ```
 
-write meta file meta.txt, the description of student。
-the content of meta.txt:
+Create a metadata file `meta.txt` with the student table description. The content of `meta.txt`:
 ```
-id||int||auto increament id[:inc(id,1)]
-name||varchar(20)||name
-school||varchar(20)||school name[:enum(file://names.txt)]
-nickname||varchar(20)||nickname[:enum(鬼泣, 高小王子, 歌神, 逗比)]
-age||int||student age[:age]
-class_num||int||class size[:int(10, 100)]
-score||decimal(4,2)||score[:decimal(4,2,1)]
-phone||bigint||phone number[:phone_number]
-email||varchar(64)||email[:email]
-ip||varchar(32)||IP[:ipv4]
-address||text||home address[:address]
+id||int||Auto-increment ID[:inc(id,1)]
+name||varchar(20)||Student name[:name]
+school||varchar(20)||School name[:enum(file://names.txt)]
+nickname||varchar(20)||Nickname[:enum(鬼泣, 高小王子, 歌神, 逗比)]
+age||int||Student age[:age]
+class_num||int||Class size[:int(10, 100)]
+score||decimal(4,2)||Score[:decimal(4,2,1)]
+phone||bigint||Phone number[:phone_number]
+email||varchar(64)||Email[:email]
+ip||varchar(32)||IP address[:ipv4]
+address||text||Home address[:address]
 ```
 
-Each row of data in the meta.txt file is a field description of the metadata, divided into three columns by ||
+Each row in the `meta.txt` file is a field description, divided into three columns by `||`:
 
-- First column: field name
-- Second column: table field type
-- Third column: field comment with construction rule tag
+- First column: Field name
+- Second column: Table field type
+- Third column: Field comment with construction rule tag
 
 
-If the field name is not marked, a string within 20 characters will be randomly generated. You can add it and change it to: 'student name[:name]`
-The school name[:enum(file://names.txt)]indicates that the enumeration data is read from the local file names.txt, and the content is that the school name can only be obtained from the following 5 schools. Randomly generated.
+If no construction rule is specified, a random string within 20 characters will be generated. You can add a rule, for example: `Student name[:name]`
+
+The `School name[:enum(file://names.txt)]` indicates that the enumeration data is read from the local file `names.txt`. The content of `names.txt` should contain the school names to be randomly selected from:
 ```
 Tsinghua Middle School
-People and center
+People and Center
 Guangdong Middle School
-Pig farm School
-Old compound School
+Pig Farm School
+Old Compound School
 ```
-The construction rule description will be described in detail later.
 
-notice：meta.txt and names.txt must put in the same directory，and run datafaker.
-if there is no enum type，not need names.txt file.
+The construction rules are described in detail in the Construction Rules section.
 
-### 5.3 read meta data from meta.txt，split by`,,` fake 10 recodes, output on screen
+**Note:** `meta.txt` and `names.txt` must be in the same directory when running datafaker. If there are no enum types, the `names.txt` file is not needed.
+
+### 5.3. Read metadata from meta.txt, split by `,,`, generate 10 records, and output to screen
 ----------------
 
 ```
-$ datafaker mysql mysql+mysqldb://root:root@localhost:3600/test stu 10 --outprint --meta meta.txt --outspliter ,,
+$ datafaker mysql mysql+mysqldb://root:root@localhost:3600/test stu 10 --outprint --meta meta.txt --outspliter ,, 
 
  1, Bao Hong,, and the center, Gao Xiao prince,, 3,, 81,, 55.6,, 13197453222,, mwei@gmail.com,, 192.100.224.255, Block I, Liangping Zhu Road, Xining City, Jiangsu Province 944204
  2, Liu Dong, Tsinghua Middle School, Gao Xiaopu, 3,, 31,, 52.4,, 15206198472,, lili@kong.cn,, 203.0.190.6, Block E, Hingshan Hohhot Street, Jiahe City, Inner Mongolia Autonomous Region 706421
@@ -117,32 +117,33 @@ printed records : 10
 time used: 0.458 s
 ```
 
-if remove outprint parameter, write into mysql.
+If you remove the `--outprint` parameter, the data will be written to MySQL:
 
 ```sh
-$ datafaker rdb mysql+mysqldb://root:root@localhost:3600/test?charset=utf8 stu 10  --meta meta.txt
+$ datafaker rdb mysql+mysqldb://root:root@localhost:3600/test?charset=utf8 stu 10 --meta meta.txt
 ```
 
-if run datafaker again，you must modify `id[:inc(id,11)]` in meta.txt, or Key reduplication error occur.
+If you run datafaker again, you must modify `id[:inc(id,11)]` in meta.txt to avoid duplicate key errors.
 
 
-### Construct rule priority:
-The parser will preferentially select the third column of the ruled field comment for parsing. If there is no tag, select the field type of the second column for parsing.
+### Construction Rule Priority
 
-This benefit is:
-- 1) Corresponding to the created data table, the user can use the desc tablename or show full columns from tablename to copy the table shema query. If the data is not satisfied with the field type, Marking machine for special processing in comments
-- 2) For the new table, mark the comment directly in the create table when creating the table. In this case, you do not need to specify a metadata file.
+The parser will preferentially parse the construction rule tag in the third column of the field comment. If there is no tag, it will parse based on the field type in the second column.
+
+This approach offers two benefits:
+1. For existing data tables, users can copy the table schema using `desc tablename` or `show full columns from tablename`, and then add special processing rules in the comments if the default field type behavior is not sufficient.
+2. For new tables, users can directly include the construction rules in the table comments when creating the table, eliminating the need to specify a separate metadata file.
 
 
-### 5.4 read meta data from data/hive_meta.txt，generate 1000 records and insert into hive
+### 5.4. Read metadata from data/hive_meta.txt, generate 1000 records, and insert into Hive
 
-user name is yarn，hive must support acid，or else generate data file and upload to hdfs
+Username is `yarn`. Hive must support ACID; otherwise, data files will be generated and uploaded to HDFS.
 
 ```
 datafaker hive hive://yarn@localhost:10000/test stu 1000 --meta data/hive_meta.txt
 ```
 
-### 5.5 write to file, write to out.txt of /home directory
+### 5.5. Write to file, write to out.txt in /home directory
 --------------------
 
 ```
@@ -150,7 +151,7 @@ datafaker file /home out.txt 10 --meta meta.txt --format json
 ```
 
 
-### 5.6 write to kafka, write to the topic hello of kafka for every 1 second
+### 5.6. Write to Kafka, write to the topic `hello` every 1 second
 -------------------------------------------
 
 ```
@@ -165,16 +166,16 @@ $ datafaker kafka localhost:9092 hello 1 --meta meta.txt --outprint
 insert records : 6
 time used: 6.285 s
 ```
-the result is:
+The result is:
 
 ![result](img/kafka.png)
 
-### JSON nesting or arbitrary data structure (not Json)
+### JSON Nesting or Arbitrary Data Structure
 ```sh
 datafaker kafka localhost:9092 hello 10 --metaj meta.txt
 ```
-use --metaj for meta file meta.txt：
-```
+Use `--metaj` for metadata file `meta.txt`:
+```json
 {
     "name": [:name],
     "age": [:age],
@@ -195,45 +196,43 @@ use --metaj for meta file meta.txt：
 }
 ```
 
-Datafaker replaces the marked string in meta.txt and remain the format, includes tab and space.
-The result is:
-```
+Datafaker replaces the marked strings in `meta.txt` while preserving the original format, including tabs and spaces. The result is:
+```json
 {
-    "name": 驷俊,
+    "name": "驷俊",
     "age": 95,
     "school": {
-        "sch_name": 旧大院,
-        "sch_address": 湖北省济南市上街宁德路I座 557270,
+        "sch_name": "旧大院",
+        "sch_address": "湖北省济南市上街宁德路I座 557270",
         "scores": [
             {
-                "class": Math,
+                "class": "Math",
                 "score": 83.28
             },
             {
-                "class": Computer,
+                "class": "Computer",
                 "score": 52.37
             }
         ]
     }
 }
-
 ```
 
-You can compress the json to a string:
-```
+You can compress the JSON to a single string:
+```json
 {"name":[:name],"age":[:age],"school":{"sch_name":[:enum(file://../data/names.txt)],"sch_address":[:address],"scores":[{"class":[:enum(Math,English)],"score":[:decimal(4,2,1)]},{"class":[:enum(Chinese,Computer)],"score":[:decimal(4,2,1)]}]}}
 ```
 
 
-### 5.7 write to hbase
+### 5.7. Write to HBase
 ----------
 
 ```
 datafaker hbase localhost:9090 test-table 10 --meta data/hbase.txt
 ```
-You must start hbase thrift service, not thrift2.
-For example, create table test-table, the column family is Cf.
-the content of meta data file hbase.txt is:
+You must start the HBase Thrift service (not Thrift2).
+
+For example, create table `test-table` with column family `Cf`. The content of metadata file `hbase.txt` is:
 
 ```
 rowkey||varchar(20)||the rowkey
@@ -241,26 +240,26 @@ Cf:name||varchar(20)||student name
 Cf:age||int||age[:age]
 ```
 
-The first row must be the rowkey, rowkey(0,1,4) indicate rowkey join the first row and fifth row by _
+The first row must be the rowkey. `rowkey(0,1,4)` indicates that the rowkey is formed by joining the values of the first and fifth columns with `_`.
 
 
-### 5.8 write to es
+### 5.8. Write to Elasticsearch
 -------
 
 ```
 datafaker es localhost:9200 example1/tp1 100 --auth elastic:elastic --meta meta.txt
 ```
 
-The localhost:9200 is the connection string for es, and hosts split by comma, such as host1:9200,host2:9200.
+`localhost:9200` is the connection string for Elasticsearch. Multiple hosts can be specified by separating them with commas, such as `host1:9200,host2:9200`.
 
-The example1/tp1 is the index and type, split by backslash.
+`example1/tp1` is the index and type, separated by a backslash.
 
-The elastic:elastic is account and password, If not, this parameter is not required.
+`elastic:elastic` is the username and password. This parameter is not required if authentication is not enabled.
 
-### 5.9 write to oracle
+### 5.9. Write to Oracle
 -----
 ```
 datafaker rdb oracle://root:root@127.0.0.1:1521/helowin stu 10 --meta meta.txt
 ```
 
-sqlalchemy connection string must start with `oracle:`.
+The SQLAlchemy connection string must start with `oracle:`.

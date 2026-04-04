@@ -1,14 +1,28 @@
-pyhive
-sqlparse>=0.4.4
-faker>=19.1.0
-configparser>=5.3.0
-kafka-python>=2.0.2
-sqlalchemy>=2.0.0
-happybase
-elasticsearch>=8.0.0
-thrift
-sasl
-pymongo>=4.0.0
-#mysql-python
-mysqlclient
-psycopg2-binary
+# 核心依赖
+faker>=19.1.0          # 用于生成测试数据
+sqlparse>=0.4.4        # 用于解析 SQL 语句
+configparser>=5.3.0    # 用于解析配置文件
+sqlalchemy>=2.0.0      # 用于数据库连接和操作
+
+# 数据库依赖
+mysqlclient            # MySQL 数据库驱动
+psycopg2-binary       # PostgreSQL 数据库驱动
+pymongo>=4.0.0         # MongoDB 数据库驱动
+
+# 大数据依赖
+pyhive                 # Hive 数据库驱动
+happybase              # HBase 数据库驱动
+thrift                 # Thrift 协议库
+sasl                   # SASL 认证库
+
+# 消息队列依赖
+kafka-python>=2.0.2    # Kafka 客户端
+
+# 搜索依赖
+elasticsearch>=8.0.0   # Elasticsearch 客户端
+
+# 开发依赖
+pytest>=7.0.0          # 测试框架
+pytest-cov>=2.12.0     # 测试覆盖率
+wheel                  # 生成分发包
+twine                  # 上传包到 PyPI

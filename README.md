@@ -1,4 +1,4 @@
-Datafaker - Tool for faking data
+Datafaker - Test Data Generation Tool
 =========
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -10,120 +10,112 @@ English | [中文](doc/zh_CN/README.md)
 
 ## 1. Introduction
 
-Datafaker is a large-scale test data and flow test data generation tool. It is compatible with python2.7 and python3.4+. Welcome to download and use. The github address is:
+Datafaker is a large-scale test data and streaming test data generation tool. It is compatible with Python 2.7 and Python 3.4+. Welcome to download and use. The GitHub address is:
 
 https://github.com/gangly/datafaker
 
-Document sync updates on github
+Documentation is synchronized and updated on GitHub
 
 ## 2. Background
-In the software development testing process, test data is often needed. These scenarios include:
+In the software development and testing process, test data is often needed. These scenarios include:
 
-- Backend development.
-After creating a new table, you need to construct database test data and generate interface data for use by the front end.
-- Database performance test.
-Generates a lot of test data to test database performance
-- Stream data test.
-For kafka streaming data, it is necessary to continuously generate test data to write to kafka.
+- Backend development: After creating a new table, you need to construct database test data and generate interface data for use by the frontend.
+- Database performance testing: Generate a large amount of test data to test database performance.
+- Streaming data testing: For Kafka streaming data, it is necessary to continuously generate test data to write to Kafka.
 
-After research, there is currently no open source test data generation tool for generating data with similar structure in mysql table. The common method is to manually create several pieces of data into the database. The disadvantage of this method is
+After research, there is currently no open-source test data generation tool that can generate data with a similar structure to MySQL tables. The common method is to manually create several pieces of data in the database. The disadvantages of this method are:
 
-- Wasting work hours.
-Needs to construct different data for fields of different data types of the table
-- Small amount of data.
-If you need to construct a lot of data, you can't do it manually.
-- Not accurate enough.
-For example, you need to construct a mailbox (satisfying a certain format), a phone number (determined number of digits), an ip address (fixed format), age (cannot be negative, have a size range), and so on. These test data have certain restrictions or rules, and the manual construction may not meet the data range or some format requirements, resulting in the backend program error.
-- Multi-table association.
-The amount of data created manually is small, and the primary key in multiple tables may not be associated with, or associated with no data.
-- Dynamic random write.
-For example, for streaming data, you need to write kafka randomly every few seconds. Or dynamically insert mysql randomly, manual operation is relatively cumbersome, and it is not good to count the number of data written.
+- Time-consuming: Need to construct different data for fields of different data types in the table.
+- Limited data volume: If you need to construct a large amount of data, manual methods are impractical.
+- Inaccurate data: For example, when constructing email addresses (which must follow a certain format), phone numbers (with a fixed number of digits), IP addresses (with a fixed format), age (non-negative with a reasonable range), etc. These test data have certain restrictions or rules, and manual construction may not meet the data range or format requirements, leading to backend program errors.
+- Multi-table association: The amount of data created manually is small, and the primary keys in multiple tables may not be associated correctly or may have no associated data.
+- Dynamic random writing: For example, for streaming data, you need to write to Kafka at random intervals. Or dynamically insert data into MySQL randomly. Manual operation is relatively cumbersome, and it is difficult to count the number of data written.
 
-In response to these current pain points, datafaker came into being. Datafaker is a multi-data source test data construction tool that can simulate most common data types and easily solve the above pain points. Datafaker has the following features:
+To address these pain points, Datafaker was developed. Datafaker is a multi-data source test data construction tool that can simulate most common data types and easily solve the above issues. Datafaker has the following features:
 
-- Multiple data types.
-Includes common database field types (integer, float, character), custom types (IP address, mailbox, ID number, etc.)
-- Simulate multi-table association data
-By formulating some fields as enumerated types (randomly selected from the specified data list), in the case of a large amount of data, it can ensure that multiple tables can be associated with each other and query data.
-- Support batch data and stream data generation, and specify stream data interval time
-- Support multiple data output methods, including screen printing, files and remote data sources
-- Support for multiple data sources. Currently supports relational databases, Hive, Kafka, MongoDB. Will be extended to ES and other data sources.
-- Can specify the output format, currently supports text, json
+- Multiple data types: Includes common database field types (integer, float, character), custom types (IP address, email, ID number, etc.).
+- Simulate multi-table association data: By designating some fields as enumerated types (randomly selected from a specified data list), it ensures that multiple tables can be associated with each other and query data correctly when generating a large amount of data.
+- Support for batch data and streaming data generation, with configurable streaming data interval times.
+- Support for multiple data output methods, including screen printing, files, and remote data sources.
+- Support for multiple data sources: Currently supports relational databases, Hive, Kafka, and MongoDB. Will be extended to Elasticsearch and other data sources.
+- Configurable output format: Currently supports text and JSON formats.
 
 ## 3. Architecture
-Datafaker is written in python and supports python2.7, python3.4+. The current version has been released on pypi.
+Datafaker is written in Python and supports Python 2.7 and Python 3.4+. The current version has been released on PyPI.
 
 
 <!-- <div align=center><img -->
 <!-- src="https://github.com/gangly/datafaker/blob/master/doc/img/datafaker.png" width="500" height="600" alt="软件架构"/> -->
 <!-- </div> -->
 
-![architectur](doc/img/datafaker.png)
+![architecture](doc/img/datafaker.png)
 
-The architecture diagram completely shows the execution process of the tool. From the figure, the tool has gone through five modules:
+The architecture diagram fully illustrates the execution process of the tool. From the diagram, the tool consists of five modules:
 
-- Parameter parser. Parse the commands that the user enters from the terminal command line.
-- Metadata parser. Users can specify metadata from local files or remote data source tables. After the parser obtains the content of the file, the text content is parsed into table field metadata and data construction rules according to the rules.
-- Data construction engine. The construction engine constructs rules based on the data generated by the metadata parser, simulating the generation of different types of data.
-- Data routing. According to different data output types, it is divided into batch data and stream data generation. Stream data can specify the frequency of generation. The data is then converted to a user-specified format for output to a different data source.
-- Data source adapter. Adapt to different data sources and import the data into the data source.
+- **Parameter parser**: Parses commands entered by the user from the terminal command line.
+- **Metadata parser**: Users can specify metadata from local files or remote data source tables. After obtaining the file content, the parser processes the text content into table field metadata and data construction rules according to predefined rules.
+- **Data construction engine**: Based on the data construction rules generated by the metadata parser, the engine simulates the generation of different types of data.
+- **Data routing**: According to different data output types, it is divided into batch data and streaming data generation. For streaming data, the generation frequency can be specified. The data is then converted to a user-specified format for output to different data sources.
+- **Data source adapter**: Adapts to different data sources and imports the generated data into the corresponding data source.
 
 ## 4. Installation
 
-#### Method 1, install from source code:
-Download the source code, unzip and install:
+### Method 1: Install from source code
+Download the source code, unzip it, and install:
 ```bash
 python setup.py install
- ```
+```
 
-#### Method 2, use pip:
+### Method 2: Use pip
 ```bash
 pip install datafaker
 ```
 
-#### Upgrade tool
+### Upgrade the tool
 ```bash
 pip install datafaker --upgrade
 ```
 
-#### Uninstall tool
+### Uninstall the tool
 ```bash
 pip uninstall datafaker
 ```
 
-#### Install require package
-| data source | package | note |
-| -------- | -------- | ------ |
-|mysql/tidb| mysql-python/mysqlclient | windows+python3 use mysqlclient|
-|oracle| cx-Oracle | need some oracle lib |
-|postgresql/redshift | psycopg2 |  |
-| sqlserver | pyodbc |  mssql+pyodbc://mssql-v  |
-|Hbase | happybase,thrift | |
-|es | elasticsearch | |
-|hive | pyhive | |
-|kafka | kafka-python | |
-|mongodb | pymongo | |
+### Required packages for data sources
+| Data Source | Package | Note |
+| ----------- | ------- | ---- |
+| MySQL/TiDB | mysql-python/mysqlclient | Use mysqlclient for Windows + Python 3 |
+| Oracle | cx-Oracle | Requires some Oracle libraries |
+| PostgreSQL/Redshift | psycopg2 | |
+| SQL Server | pyodbc | Use connection string format: mssql+pyodbc://mssql-v |
+| HBase | happybase, thrift | |
+| Elasticsearch | elasticsearch | |
+| Hive | pyhive | |
+| Kafka | kafka-python | |
+| MongoDB | pymongo | |
 
-## 5. examples
+## 5. Examples
 
-[usage example(使用举例)](doc/UseExample.md)
-
-
-## 6. command parameters
-
-[parameters detail(命令行参数)](doc/cmdParameters.md)
+[Usage Examples](doc/UseExample.md)
 
 
-## 7. construction rule
+## 6. Command Parameters
 
-[construction rule(构造规则)](doc/ConstructionRule.md)
+[Command Parameters](doc/cmdParameters.md)
 
-## 8. note
 
-[note(注意事项)](doc/note.md)
+## 7. Construction Rules
 
-## 9. Release note
-[Release note(发布记录)](doc/release_note.md)
+[Construction Rules](doc/ConstructionRule.md)
+
+
+## 8. Notes
+
+[Notes](doc/note.md)
+
+
+## 9. Release Notes
+[Release Notes](doc/release_note.md)
 _____
 
 **Give a star or donate a coffee to the author**
