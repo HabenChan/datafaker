@@ -1,6 +1,29 @@
 ## 9. release note
 English | [中文](zh_CN/release_note.md)
 
+0.8.0
+
+New additions:
+
+- Added PostgreSQL data types support
+- Added MongoDB data source support
+- Added custom primary key types (str_pk, hash_pk, composite_pk, random_str_pk)
+
+Improvements:
+
+- Improved code structure by splitting fakedata.py into modular components
+- Improved test coverage from 31% to 63%
+- Updated documentation with accurate English translations
+- Updated dependency versions to improve security and performance
+
+Fixes:
+
+- Fixed fake_bigint function logic error
+- Fixed fake_timestamp function to return actual timestamp
+- Fixed PostgreSQL fake_money function
+- Fixed StoppableThread class to be compatible with threading.Thread
+- Fixed compat_input function for Python 3 compatibility
+
 0.7.0
 
 The restoration of
