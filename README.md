@@ -47,7 +47,7 @@ Includes common database field types (integer, float, character), custom types (
 By formulating some fields as enumerated types (randomly selected from the specified data list), in the case of a large amount of data, it can ensure that multiple tables can be associated with each other and query data.
 - Support batch data and stream data generation, and specify stream data interval time
 - Support multiple data output methods, including screen printing, files and remote data sources
-- Support for multiple data sources. Currently supports relational databases, Hive, Kafka. Will be extended to Mongo, ES and other data sources.
+- Support for multiple data sources. Currently supports relational databases, Hive, Kafka, MongoDB. Will be extended to ES and other data sources.
 - Can specify the output format, currently supports text, json
 
 ## 3. Architecture
@@ -102,6 +102,7 @@ pip uninstall datafaker
 |es | elasticsearch | |
 |hive | pyhive | |
 |kafka | kafka-python | |
+|mongodb | pymongo | |
 
 ## 5. examples
 

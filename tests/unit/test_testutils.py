@@ -26,7 +26,7 @@ class TestFileCreator(unittest.TestCase):
         self.assertEqual(os.path.getsize(fullpath), 8*1024)
 
     def test_read_file_lines(self):
-        filepath = "__init__.py"
+        filepath = "tests/__init__.py"
         read_file_lines(filepath)
 
 

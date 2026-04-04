@@ -25,10 +25,10 @@ def find_version(*file_paths):
 
 # requires = [open('requirements.txt').read().splitlines()]
 requires = [
-    'sqlparse==0.3.0',
-    'faker==2.0.2',
-    'configparser',
-    'sqlalchemy==1.3.8',
+    'sqlparse>=0.4.4',
+    'faker>=19.1.0',
+    'configparser>=5.3.0',
+    'sqlalchemy>=2.0.0',
 ]
 
 if sys.platform == 'win32':

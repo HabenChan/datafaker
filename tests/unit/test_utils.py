@@ -20,4 +20,4 @@ def test_process_op_args():
 
 
 def test_read_file():
-    print(read_file('test_reg.py'))
+    print(read_file('tests/unit/test_reg.py'))

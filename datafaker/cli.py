@@ -89,7 +89,12 @@ def main():
 
         db = load_db_class(args.dbtype)(args)
         db.do_fake()
+    except ParamError as e:
+        print(f"Parameter error: {e}")
+        sys.exit(1)
     except Exception as e:
         msg = traceback.format_exc()
+        print(f"Error: {e}")
+        print("Detailed error:")
         print(msg)
-        print(e)
+        sys.exit(1)

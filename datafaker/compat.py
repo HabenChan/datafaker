@@ -258,7 +258,7 @@ def compat_input(prompt):
     """
     sys.stdout.write(prompt)
     sys.stdout.flush()
-    return raw_input()
+    return input()
 
 
 def compat_shell_quote(s, platform=None):

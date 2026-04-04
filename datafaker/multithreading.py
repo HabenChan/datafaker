@@ -9,10 +9,12 @@ class StoppableThread(threading.Thread):
     """Thread class with a terminate() method. The thread itself has to check
     regularly for the stopped() condition."""
 
-    def terminate(self):
+    def __init__(self, target=None, args=()):
+        super(StoppableThread, self).__init__(target=target, args=args)
         self._stop_event = threading.Event()
+
+    def terminate(self):
         self._stop_event.set()
-        raise KeyboardInterrupt
 
     def stopped(self):
         return self._stop_event.is_set()
